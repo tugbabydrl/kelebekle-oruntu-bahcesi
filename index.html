@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kelebekle Örüntü Bahçesi</title>
+<style>
+:root{--ink:#3b3861;--pink:#ff8fbd;--yellow:#ffd96b;--mint:#9ee8d0;--lav:#c9b7ff;--bg:#fff8f0;--green:#5dbd91}
+*{box-sizing:border-box} body{margin:0;font-family:"Trebuchet MS",system-ui,sans-serif;color:var(--ink);background:linear-gradient(135deg,#fff7ef,#f3f0ff);min-height:100vh}
+button,select{font:inherit}button{border:0;border-radius:18px;padding:12px 18px;font-weight:800;cursor:pointer;color:var(--ink);background:#fff;box-shadow:0 5px 0 #ddd4ee;transition:transform .15s}button:hover{transform:translateY(-2px)}button:active{transform:translateY(2px);box-shadow:0 2px 0 #ddd4ee}
+button:focus-visible,select:focus-visible{outline:4px solid #6b9dff;outline-offset:3px}
+.app{max-width:1050px;margin:auto;padding:18px}.topbar{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-bottom:12px}.brand{font-size:clamp(1.2rem,3vw,2rem);font-weight:1000}.stats{display:flex;gap:8px;flex-wrap:wrap}.pill{background:#fff;border:2px solid #eee5ff;border-radius:999px;padding:8px 13px;font-weight:800}
+.panel{background:rgba(255,255,255,.88);border:3px solid #fff;border-radius:28px;padding:clamp(16px,3vw,30px);box-shadow:0 12px 30px #6c5c9815}
+.screen{display:none}.screen.active{display:block}.hero{text-align:center;padding:30px 12px}.butterfly{font-size:clamp(4rem,11vw,7rem);animation:float 2.4s ease-in-out infinite;display:inline-block;filter:drop-shadow(0 7px 4px #d6b7e9)}h1{font-size:clamp(2rem,5vw,3.5rem);margin:8px 0;color:#7452a8}h2{margin-top:0}.sub{font-size:1.12rem;line-height:1.5;max-width:650px;margin:10px auto 22px}.primary{background:var(--pink);box-shadow:0 5px 0 #e36d9f}.secondary{background:var(--mint);box-shadow:0 5px 0 #71c9ad}.yellow{background:var(--yellow);box-shadow:0 5px 0 #e9bd43}.menu-buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}.settings{margin:20px auto 0;display:flex;justify-content:center;gap:12px;align-items:center;flex-wrap:wrap}.settings select{padding:10px 14px;border:2px solid #e7ddfa;border-radius:14px;background:white;color:var(--ink);font-weight:700}
+.instruction{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:20px 0}.step{background:#fff7d8;border-radius:18px;padding:14px;min-width:145px;font-weight:800}.step span{display:block;font-size:2rem}
+.game-head{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.task{font-size:clamp(1.2rem,3vw,1.8rem);font-weight:900;text-align:center;margin:18px 0 8px}.hint{text-align:center;min-height:1.5em;color:#786f99;font-weight:700}
+.pattern{display:flex;justify-content:center;align-items:center;gap:clamp(5px,1.5vw,14px);flex-wrap:wrap;margin:20px auto 25px;min-height:90px}.tile{width:clamp(54px,10vw,82px);height:clamp(54px,10vw,82px);border-radius:22px;display:flex;align-items:center;justify-content:center;font-size:clamp(1.7rem,4vw,2.6rem);box-shadow:0 5px 0 #dcd4e9;border:3px solid #fff;animation:pop .25s ease-out}.missing{background:#fff;border:3px dashed #a79ac8;color:#a79ac8;font-size:2rem}
+.choices{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin:16px 0}.choice{min-width:75px;min-height:75px;font-size:2.2rem;border:3px solid white}.feedback{text-align:center;font-size:1.15rem;font-weight:900;min-height:32px;margin:8px 0}.footer-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:14px}
+.progress{height:12px;background:#eee7fa;border-radius:99px;overflow:hidden;flex:1;min-width:100px}.progress div{height:100%;background:linear-gradient(90deg,#ff9ac6,#a5e6d0);width:0%;transition:width .3s}
+.result{text-align:center}.big-score{font-size:2.3rem;font-weight:1000;color:#7452a8}.badge{display:inline-block;padding:9px 14px;border-radius:999px;background:#fff0b8;margin:5px;font-weight:900}
+.small{font-size:.9rem;color:#777092}.teacher{margin-top:18px}.teacher summary{font-weight:900;cursor:pointer}.report{width:100%;border-collapse:collapse;margin-top:12px}.report th,.report td{padding:8px;border-bottom:1px solid #eee;text-align:left}
+@keyframes float{0%,100%{transform:translateY(0) rotate(-4deg)}50%{transform:translateY(-10px) rotate(4deg)}}@keyframes pop{from{transform:scale(.75);opacity:.5}to{transform:scale(1);opacity:1}}@keyframes wiggle{0%,100%{transform:rotate(0)}25%{transform:rotate(-5deg)}75%{transform:rotate(5deg)}}.wiggle{animation:wiggle .25s 2}
+@media(max-width:520px){.app{padding:10px}.panel{padding:15px;border-radius:22px}.tile{border-radius:16px}.topbar{align-items:flex-start}.brand{max-width:65%}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">🌼 Kelebekle Örüntü Bahçesi</div>
+    <div class="stats"><div class="pill">⭐ Puan: <span id="scoreTop">0</span></div><div class="pill">🌟 Yıldız: <span id="starsTop">0</span></div><button id="soundBtn" aria-label="Sesi aç veya kapat">🔊 Ses açık</button></div>
+  </header>
+
+  <section id="home" class="screen active panel hero">
+    <div class="butterfly" aria-hidden="true">🦋</div>
+    <h1>Örüntü Bahçesi</h1>
+    <p class="sub">Minik kelebekle renkleri, şekilleri ve nesneleri sıraya diz! Eksik parçayı bul, bahçeyi renklendir. 🌷</p>
+    <div class="menu-buttons"><button class="primary" id="startBtn">🌈 BAŞLA</button><button class="secondary" id="howBtn">👀 NASIL OYNANIR?</button></div>
+    <div class="settings"><label for="ageSelect"><b>Yaş grubu:</b></label><select id="ageSelect"><option value="3-4">3–4 yaş · Kolay</option><option value="4-5" selected>4–5 yaş · Orta</option><option value="5-6">5–6 yaş · Zor</option></select><button id="fullBtn">⛶ Tam ekran</button></div>
+    <details class="teacher"><summary>👩‍🏫 Öğretmen özeti</summary><p>Hedef: AB ve ABC örüntülerini fark etme, sürdürme ve eksik öğeyi tamamlama. Oyun süresince doğru cevap, yeniden deneme ve tamamlanan görev sayısı yerel oturumda izlenir. Öğrenci adı istenmez.</p></details>
+  </section>
+
+  <section id="how" class="screen panel hero">
+    <div class="butterfly">🦋</div><h2>Nasıl oynanır?</h2>
+    <div class="instruction"><div class="step"><span>👀</span>Örüntüye bak</div><div class="step"><span>🧩</span>Eksik parçayı seç</div><div class="step"><span>⭐</span>Yıldızını kazan</div></div>
+    <p class="sub">Sırada hangi şekil ya da renk gelmeli? Doğru parçaya dokunman yeterli. Yanlış seçimde tekrar deneyebilirsin!</p>
+    <button class="primary" id="howBack">ANLADIM!</button>
+  </section>
+
+  <section id="game" class="screen panel">
+    <div class="game-head"><div><b id="levelLabel">Bölüm 1 / 5</b><div class="small" id="ageLabel">4–5 yaş</div></div><div class="progress" aria-label="İlerleme"><div id="progressFill"></div></div><button id="homeBtn">🏡 Menü</button></div>
+    <div class="task" id="taskText">Sıradaki parçayı bul!</div>
+    <div class="hint" id="hintText">Örüntüye dikkatlice bak.</div>
+    <div class="pattern" id="pattern" aria-label="Örüntü"></div>
+    <div class="choices" id="choices" aria-label="Cevap seçenekleri"></div>
+    <div class="feedback" id="feedback" aria-live="polite"></div>
+    <div class="footer-actions"><button class="yellow" id="repeatBtn">🔄 Yeniden dene</button><button class="secondary" id="hintBtn">💡 İpucu</button></div>
+  </section>
+
+  <section id="result" class="screen panel result">
+    <div class="butterfly">🦋</div><h1>Harikasın!</h1><p class="sub">Örüntü bahçesini birlikte tamamladık!</p>
+    <div id="resultStars" style="font-size:2.5rem">⭐⭐⭐</div>
+    <div class="big-score">Puan: <span id="finalScore">0</span></div>
+    <p id="resultSummary"></p><div id="resultBadges"></div>
+    <div class="menu-buttons"><button class="primary" id="againBtn">🔁 Tekrar oyna</button><button class="secondary" id="nextBtn">🌼 Yeni tur</button><button id="resultHomeBtn">🏡 Ana menü</button></div>
+    <details class="teacher"><summary>📊 Öğretmen için oturum özeti</summary><div id="teacherReport"></div></details>
+  </section>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const state = {age:"4-5", level:0, score:0, stars:0, correct:0, retries:0, completed:0, streak:0, maxStreak:0, attempts:0, sound:true, startedAt:0, taskStartedAt:0, records:[]};
+  const palettes = {
+    pink:{emoji:"🌸",bg:"#ffc6df"}, yellow:{emoji:"🌼",bg:"#ffe18a"}, blue:{emoji:"💧",bg:"#bde5ff"},
+    purple:{emoji:"💜",bg:"#d8c8ff"}, leaf:{emoji:"🍃",bg:"#b9efd6"}, sun:{emoji:"☀️",bg:"#ffe7a8"},
+    circle:{emoji:"🔵",bg:"#c6e9ff"}, square:{emoji:"🟪",bg:"#d8c8ff"}, triangle:{emoji:"🔺",bg:"#ffc4c4"},
+    star:{emoji:"⭐",bg:"#fff0a6"}, bee:{emoji:"🐝",bg:"#ffdf8d"}, flower:{emoji:"🌷",bg:"#ffd1e7"},
+    apple:{emoji:"🍎",bg:"#ffc6c6"}, berry:{emoji:"🫐",bg:"#d7d1ff"}
+  };
+  const questionBank = {
+    "3-4":[
+      {seq:["pink","yellow","pink","yellow"],answer:"pink",options:["pink","yellow"],label:"Renk örüntüsü"},
+      {seq:["leaf","sun","leaf","sun"],answer:"leaf",options:["sun","leaf"],label:"Bahçe örüntüsü"},
+      {seq:["circle","square","circle","square"],answer:"circle",options:["triangle","circle"],label:"Şekil örüntüsü"},
+      {seq:["flower","bee","flower","bee"],answer:"flower",options:["bee","flower"],label:"Canlılar örüntüsü"},
+      {seq:["pink","yellow","pink","yellow","pink"],answer:"yellow",options:["yellow","leaf"],label:"Sırayı tamamla"}
+    ],
+    "4-5":[
+      {seq:["pink","yellow","pink","yellow","pink"],answer:"yellow",options:["yellow","blue","pink"],label:"Renk örüntüsü"},
+      {seq:["circle","square","circle","square","circle"],answer:"square",options:["triangle","square","circle"],label:"Şekil örüntüsü"},
+      {seq:["leaf","sun","flower","leaf","sun"],answer:"flower",options:["bee","flower","leaf"],label:"Bahçe örüntüsü"},
+      {seq:["apple","berry","apple","berry","apple"],answer:"berry",options:["apple","berry","sun"],label:"Meyve örüntüsü"},
+      {seq:["pink","yellow","blue","pink","yellow"],answer:"blue",options:["pink","blue","yellow"],label:"Üçlü örüntü"}
+    ],
+    "5-6":[
+      {seq:["pink","yellow","blue","pink","yellow","blue"],answer:"pink",options:["pink","yellow","purple"],label:"Üçlü renk örüntüsü"},
+      {seq:["circle","circle","triangle","circle","circle"],answer:"triangle",options:["square","triangle","circle"],label:"Tekrar eden grup"},
+      {seq:["leaf","sun","flower","sun","leaf","sun"],answer:"flower",options:["leaf","flower","sun"],label:"Bahçe örüntüsü"},
+      {seq:["apple","berry","sun","apple","berry"],answer:"sun",options:["apple","sun","berry"],label:"Nesne örüntüsü"},
+      {seq:["pink","yellow","yellow","pink","yellow","yellow"],answer:"pink",options:["yellow","pink","blue"],label:"İkili grup örüntüsü"}
+    ]
+  };
+  const messagesGood=["Harika! 🌟","Buldun! 🦋","Süper gidiyorsun! 🌈","Bahçen parlıyor! ✨"];
+  const screens=["home","how","game","result"];
+  function show(name){screens.forEach(s=>$(s).classList.toggle("active",s===name));}
+  function updateStats(){$("scoreTop").textContent=state.score;$("starsTop").textContent=state.stars;}
+  function beep(freq=660,duration=.12,type="sine"){
+    if(!state.sound)return;
+    try{const ctx=new (window.AudioContext||window.webkitAudioContext)();const osc=ctx.createOscillator(),gain=ctx.createGain();osc.type=type;osc.frequency.value=freq;gain.gain.setValueAtTime(.07,ctx.currentTime);gain.gain.exponentialRampToValueAtTime(.001,ctx.currentTime+duration);osc.connect(gain);gain.connect(ctx.destination);osc.start();osc.stop(ctx.currentTime+duration);osc.onended=()=>ctx.close();}catch(e){}
+  }
+  function say(text){if(!state.sound||!("speechSynthesis"in window))return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);u.lang="tr-TR";u.rate=.88;u.pitch=1.15;speechSynthesis.speak(u);}catch(e){}}
+  function start(){
+    state.age=$("ageSelect").value;state.level=0;state.score=0;state.stars=0;state.correct=0;state.retries=0;state.completed=0;state.streak=0;state.maxStreak=0;state.attempts=0;state.records=[];state.startedAt=Date.now();updateStats();renderLevel();show("game");
+  }
+  function renderLevel(){
+    const qs=questionBank[state.age];const q=qs[state.level];state.taskStartedAt=Date.now();
+    $("levelLabel").textContent=`Bölüm ${state.level+1} / ${qs.length}`;$("ageLabel").textContent=({ "3-4":"3–4 yaş · Kolay","4-5":"4–5 yaş · Orta","5-6":"5–6 yaş · Zor"})[state.age];
+    $("progressFill").style.width=`${state.level/qs.length*100}%`;
+    $("taskText").textContent=state.age==="3-4"?"Eksik parçayı bul!":"Sırada ne gelmeli?";
+    $("hintText").textContent=q.label+" · Kelebek sana güveniyor!";
+    $("pattern").innerHTML="";
+    q.seq.forEach(key=>{const el=document.createElement("div");el.className="tile";el.textContent=palettes[key].emoji;el.style.background=palettes[key].bg;el.setAttribute("aria-label",q.label);$("pattern").appendChild(el);});
+    const missing=document.createElement("div");missing.className="tile missing";missing.textContent="?";missing.setAttribute("aria-label","Eksik parça");$("pattern").appendChild(missing);
+    $("choices").innerHTML="";$("feedback").textContent="";
+    [...q.options].sort(()=>Math.random()-.5).forEach(key=>{
+      const b=document.createElement("button");b.className="choice";b.textContent=palettes[key].emoji;b.style.background=palettes[key].bg;b.setAttribute("aria-label",key);b.addEventListener("click",()=>answer(key,b));$("choices").appendChild(b);
+    });
+    state.attempts++;
+    say(state.age==="3-4"?"Eksik parçayı bul.":"Sırada ne gelmeli?");
+  }
+  function answer(key,button){
+    const q=questionBank[state.age][state.level];
+    if(button.disabled)return;
+    if(key===q.answer){
+      state.correct++;state.completed++;state.streak++;state.maxStreak=Math.max(state.maxStreak,state.streak);
+      state.score+=10;if(state.streak>0&&state.streak%3===0)state.score+=20;
+      state.stars+=1;const elapsed=Math.round((Date.now()-state.taskStartedAt)/1000);
+      state.records.push({level:state.level+1,answer:"Doğru",retries:0,seconds:elapsed});
+      $("feedback").textContent=messagesGood[Math.floor(Math.random()*messagesGood.length)];$("feedback").style.color="#279b70";
+      button.style.outline="4px solid #65c99b";button.textContent="✨"+palettes[key].emoji;
+      [...$("choices").children].forEach(b=>b.disabled=true);
+      updateStats();beep(780,.1);setTimeout(()=>beep(990,.13),90);say("Harika!");
+      const tiles=$("pattern").children;tiles[tiles.length-1].className="tile";tiles[tiles.length-1].textContent=palettes[key].emoji;tiles[tiles.length-1].style.background=palettes[key].bg;
+      setTimeout(()=>{if(state.level<questionBank[state.age].length-1){state.level++;renderLevel();}else finish();},850);
+    }else{
+      state.retries++;state.streak=0;$("feedback").textContent="Bir daha deneyelim 💛";$("feedback").style.color="#96734a";button.classList.add("wiggle");setTimeout(()=>button.classList.remove("wiggle"),500);beep(260,.12,"triangle");say("Bir daha deneyelim.");
+    }
+  }
+  function hint(){
+    const q=questionBank[state.age][state.level];$("hintText").textContent="İpucu: Sıranın başındaki renk ve şekillere yeniden bak. 👀";beep(520,.1);say("Sırayı dikkatlice incele.");
+  }
+  function finish(){
+    const total=questionBank[state.age].length;const pct=Math.round(state.completed/total*100);const rating=pct>=90?3:pct>=70?2:1;
+    $("progressFill").style.width="100%";$("finalScore").textContent=state.score;$("resultStars").textContent="⭐".repeat(rating)+"☆".repeat(3-rating);
+    $("resultSummary").textContent=`${total} görevden ${state.completed} tanesini tamamladın! Yeniden deneme: ${state.retries}. Başarı: %${pct}.`;
+    $("resultBadges").innerHTML=`<span class="badge">🦋 Örüntü Kaşifi</span> <span class="badge">🌼 ${state.stars} yıldız</span>`;
+    const elapsed=Math.round((Date.now()-state.startedAt)/1000);
+    $("teacherReport").innerHTML=`<table class="report"><tr><th>Yaş grubu</th><td>${state.age}</td></tr><tr><th>Tamamlanan görev</th><td>${state.completed}/${total}</td></tr><tr><th>Doğru yanıt</th><td>${state.correct}</td></tr><tr><th>Yeniden deneme</th><td>${state.retries}</td></tr><tr><th>En uzun doğru serisi</th><td>${state.maxStreak}</td></tr><tr><th>Toplam süre</th><td>${elapsed} saniye</td></tr><tr><th>Başarı yüzdesi</th><td>%${pct}</td></tr></table><p class="small">Veriler yalnızca bu oturumda tutulur; sunucuya gönderilmez.</p>`;
+    show("result");beep(660,.12);setTimeout(()=>beep(880,.16),140);say("Tebrikler! Bahçeyi tamamladın.");
+  }
+  $("startBtn").addEventListener("click",start);$("howBtn").addEventListener("click",()=>show("how"));$("howBack").addEventListener("click",()=>show("home"));
+  $("homeBtn").addEventListener("click",()=>show("home"));$("hintBtn").addEventListener("click",hint);
+  $("repeatBtn").addEventListener("click",()=>{state.retries++;renderLevel();});
+  $("againBtn").addEventListener("click",start);$("nextBtn").addEventListener("click",start);$("resultHomeBtn").addEventListener("click",()=>show("home"));
+  $("soundBtn").addEventListener("click",()=>{state.sound=!state.sound;$("soundBtn").textContent=state.sound?"🔊 Ses açık":"🔇 Ses kapalı";if(!state.sound&&"speechSynthesis"in window)speechSynthesis.cancel();else beep(650,.1);});
+  $("fullBtn").addEventListener("click",async()=>{try{if(!document.fullscreenElement)await document.documentElement.requestFullscreen();else await document.exitFullscreen();}catch(e){alert("Tam ekran bu tarayıcıda kullanılamıyor olabilir.");}});
+  document.addEventListener("keydown",e=>{if(!$("game").classList.contains("active"))return;const buttons=[...$("choices").querySelectorAll("button")];if(["1","2","3"].includes(e.key)&&buttons[Number(e.key)-1])buttons[Number(e.key)-1].click();});
+  updateStats();
+})();
+</script>
+</body>
+</html>
